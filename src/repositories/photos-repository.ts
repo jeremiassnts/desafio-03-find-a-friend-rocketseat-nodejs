@@ -1,5 +1,5 @@
-import { Prisma, Photo } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 export interface PhotosRepository {
-  create(data: Prisma.PhotoUncheckedCreateInput): Promise<Photo>
+  createMany(photos: Prisma.PhotoUncheckedCreateInput[]): Promise<number>
 }

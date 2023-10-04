@@ -1,8 +1,10 @@
 import fastify from 'fastify'
 import { ZodError } from 'zod'
+import { petsRoutes } from './http/controllers/pets/routes'
 
 export const app = fastify()
 
+app.register(petsRoutes)
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
     return reply.status(400).send({

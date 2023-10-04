@@ -16,7 +16,7 @@ describe('Create pet', () => {
     sut = new CreatePetUseCase(petsRepository, photosRepository)
   })
   it('should be able to create a pet with photos', async () => {
-    const { pet, photos } = await sut.execute({
+    const { pet, photosLength } = await sut.execute({
       name: 'bethoven',
       about: 'A movie star dog',
       age: 'Adulto',
@@ -30,6 +30,6 @@ describe('Create pet', () => {
 
     expect(pet.id).toEqual(expect.any(String))
     expect(pet.requirements).toHaveLength(2)
-    expect(photos).toHaveLength(2)
+    expect(photosLength).toEqual(2)
   })
 })

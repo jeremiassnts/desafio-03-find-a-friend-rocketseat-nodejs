@@ -5,15 +5,17 @@ import { PhotosRepository } from '../photos-repository'
 export class InMemoryPhotosRepository implements PhotosRepository {
   public photos: Photo[] = []
 
-  async create({ url, order, pet_id }: Prisma.PhotoUncheckedCreateInput) {
-    const photo: Photo = {
-      id: randomUUID(),
-      url,
-      order,
-      pet_id,
-    }
+  async createMany(data: Prisma.PhotoUncheckedCreateInput[]) {
+    const photos = data.map(
+      ({ url, order, pet_id }: Prisma.PhotoUncheckedCreateInput) => ({
+        id: randomUUID(),
+        url,
+        order,
+        pet_id,
+      }),
+    )
 
-    this.photos.push(photo)
-    return photo
+    this.photos = this.photos.concat(photos)
+    return photos.length
   }
 }

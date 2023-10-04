@@ -1,14 +1,6 @@
 import { PetsRepository } from '@/repositories/pets-repository'
 import { PhotosRepository } from '@/repositories/photos-repository'
-import {
-  AGE,
-  SIZE,
-  ENERGY,
-  INDEPENDENCY,
-  AMBIENT,
-  Pet,
-  Photo,
-} from '@prisma/client'
+import { AGE, SIZE, ENERGY, INDEPENDENCY, AMBIENT, Pet } from '@prisma/client'
 
 interface CreatePetUseCaseRequest {
   name: string
@@ -24,7 +16,7 @@ interface CreatePetUseCaseRequest {
 
 interface CreatePetUseCaseResponse {
   pet: Pet
-  photos: Photo[]
+  photosLength: number
 }
 
 export class CreatePetUseCase {
@@ -54,21 +46,18 @@ export class CreatePetUseCase {
       size,
       requirements,
     })
-    let index = 0
-    const insertedPhotos: Photo[] = []
-    for (const photo in photos) {
-      const newPhoto = await this.photosRepository.create({
-        url: photo,
+
+    const photosLength = await this.photosRepository.createMany(
+      photos.map((e, index) => ({
+        url: e,
         order: index,
         pet_id: pet.id,
-      })
-      index++
-      insertedPhotos.push(newPhoto)
-    }
+      })),
+    )
 
     return {
       pet,
-      photos: insertedPhotos,
+      photosLength,
     }
   }
 }

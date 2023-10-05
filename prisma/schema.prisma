@@ -40,16 +40,18 @@ enum AMBIENT {
 }
 
 model Pet {
-    id           String       @id @default(uuid())
-    name         String
-    about        String       @db.VarChar(300)
-    age          AGE
-    size         SIZE
-    energy       ENERGY
-    independency INDEPENDENCY
-    ambient      AMBIENT
-    Photo        Photo[]
-    requirements String[]
+    id             String        @id @default(uuid())
+    name           String
+    about          String        @db.VarChar(300)
+    age            AGE
+    size           SIZE
+    energy         ENERGY
+    independency   INDEPENDENCY
+    ambient        AMBIENT
+    Photo          Photo[]
+    requirements   String[]
+    Organization   Organization? @relation(fields: [organizationId], references: [id])
+    organizationId String?
 
     @@map("pets")
 }
@@ -62,4 +64,17 @@ model Photo {
     pet_id String
 
     @@map("photos")
+}
+
+model Organization {
+    id            String @id @default(uuid())
+    owner         String
+    email         String @unique
+    CEP           String @db.VarChar(9)
+    address       String
+    whatsapp      String @unique @db.VarChar(11)
+    password_hash String
+    pets          Pet[]
+
+    @@map("organizations")
 }

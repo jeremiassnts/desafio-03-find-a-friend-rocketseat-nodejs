@@ -66,15 +66,31 @@ model Photo {
     @@map("photos")
 }
 
-model Organization {
-    id            String @id @default(uuid())
-    owner         String
-    email         String @unique
-    CEP           String @db.VarChar(9)
-    address       String
-    whatsapp      String @unique @db.VarChar(11)
+enum ROLES {
+    COMMON
+    ORG
+}
+
+model User {
+    id            String        @id @default(uuid())
+    name          String
+    email         String        @unique
     password_hash String
-    pets          Pet[]
+    role          ROLES
+    organization  Organization?
+
+    @@map("users")
+}
+
+model Organization {
+    id       String @id @default(uuid())
+    owner    String
+    CEP      String @db.VarChar(9)
+    address  String
+    whatsapp String @unique @db.VarChar(11)
+    pets     Pet[]
+    user     User   @relation(fields: [userId], references: [id])
+    userId   String @unique
 
     @@map("organizations")
 }

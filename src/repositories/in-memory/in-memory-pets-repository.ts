@@ -14,7 +14,8 @@ export class InMemoryPetsRepository implements PetsRepository {
     independency,
     size,
     requirements,
-  }: Prisma.PetCreateInput) {
+    organizationId
+  }: Prisma.PetUncheckedCreateInput) {
     const pet: Pet = {
       id: randomUUID(),
       name,
@@ -25,6 +26,7 @@ export class InMemoryPetsRepository implements PetsRepository {
       independency,
       size,
       requirements,
+      organizationId
     }
 
     this.pets.push(pet)

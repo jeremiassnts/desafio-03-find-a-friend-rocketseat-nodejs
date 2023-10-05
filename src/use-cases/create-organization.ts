@@ -1,31 +1,28 @@
 import { OrganizationsRepository } from "@/repositories/organizations-repository";
-import { hash } from 'bcryptjs'
-import { OrganizationAlreadyExistsError } from "./errors/organization-already-exists";
+import { RegisterAlreadyExistsError } from "./errors/register-already-exists";
+import { UserHasOrganizationError } from "./errors/user-has-organization";
 
 interface CreateOrganizationUseCaseRequest {
     owner: string
-    email: string
     CEP: string
     address: string
     whatsapp: string
-    password: string
+    userId: string
 }
 export class CreateOrganizationUseCase {
     constructor(private organizationsRepository: OrganizationsRepository) { }
-    async execute({ owner, email, CEP, address, whatsapp, password }: CreateOrganizationUseCaseRequest) {
-        let org = await this.organizationsRepository.findByEmail(email)
+    async execute({ owner, CEP, address, whatsapp, userId }: CreateOrganizationUseCaseRequest) {
+        let org = await this.organizationsRepository.findByUserId(userId)
         if (org) {
-            throw new OrganizationAlreadyExistsError()
+            throw new UserHasOrganizationError()
         }
 
         org = await this.organizationsRepository.findByWhatsapp(whatsapp)
         if (org) {
-            throw new OrganizationAlreadyExistsError()
+            throw new RegisterAlreadyExistsError()
         }
 
-        const password_hash = await hash(password, 6)
-        org = await this.organizationsRepository.create({ address, CEP, email, owner, password_hash, whatsapp })
-
+        org = await this.organizationsRepository.create({ address, CEP, owner, whatsapp, userId })
         return {
             org
         }

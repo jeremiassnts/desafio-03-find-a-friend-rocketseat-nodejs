@@ -1,7 +1,7 @@
 import { Organization, Prisma } from "@prisma/client";
 
 export interface OrganizationsRepository {
-    create(data: Prisma.OrganizationCreateInput): Promise<Organization>
-    findByEmail(email: string): Promise<Organization | null>
+    create(data: Prisma.OrganizationUncheckedCreateInput): Promise<Organization>
     findByWhatsapp(whatsapp: string): Promise<Organization | null>
+    findByUserId(userId: string): Promise<Organization | null>
 }

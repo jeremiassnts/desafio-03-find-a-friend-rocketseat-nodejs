@@ -7,6 +7,7 @@ import { UsersRepository } from '@/repositories/users-repository'
 import { RegisterAlreadyExistsError } from './errors/register-already-exists'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { UserHasOrganizationError } from './errors/user-has-organization'
+import { OrganizationMustBeCompleteError } from './errors/organization-must-be-complete'
 
 describe('Create pet', () => {
     let organizationsRepository: OrganizationsRepository
@@ -98,5 +99,23 @@ describe('Create pet', () => {
                 userId: user2.id
             })
         ).rejects.toBeInstanceOf(RegisterAlreadyExistsError)
+    })
+
+    it('should not be able to create a organization without address and whatsapp', async () => {
+        const { user } = await createUserUseCase.execute({
+            name: "joao",
+            email: "joao@email.com",
+            password: "123456",
+            role: "ORG"
+        })
+
+        await expect(() =>
+            sut.execute({
+                address: null,
+                CEP: null,
+                owner: "joao santos",
+                whatsapp: null,
+                userId: user.id
+            })).rejects.toBeInstanceOf(OrganizationMustBeCompleteError)
     })
 })

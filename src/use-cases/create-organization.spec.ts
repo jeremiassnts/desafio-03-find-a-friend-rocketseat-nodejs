@@ -9,7 +9,7 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-user
 import { UserHasOrganizationError } from './errors/user-has-organization'
 import { OrganizationMustBeCompleteError } from './errors/organization-must-be-complete'
 
-describe('Create pet', () => {
+describe('Create organization', () => {
     let organizationsRepository: OrganizationsRepository
     let usersRepository: UsersRepository
     let sut: CreateOrganizationUseCase
@@ -30,8 +30,7 @@ describe('Create pet', () => {
         })
 
         const { org } = await sut.execute({
-            address: "rua a",
-            CEP: "49000-00",
+            CEP: "49066219",
             owner: "joao santos",
             whatsapp: "79999990000",
             userId: user.id
@@ -49,8 +48,7 @@ describe('Create pet', () => {
         })
 
         await sut.execute({
-            address: "rua a",
-            CEP: "49000-00",
+            CEP: "49066219",
             owner: "joao santos",
             whatsapp: "79999990000",
             userId: user.id
@@ -58,8 +56,7 @@ describe('Create pet', () => {
 
         await expect(() =>
             sut.execute({
-                address: "rua b",
-                CEP: "48000-00",
+                CEP: "01001000",
                 owner: "jose santos",
                 whatsapp: "79999991111",
                 userId: user.id
@@ -76,8 +73,7 @@ describe('Create pet', () => {
         })
 
         await sut.execute({
-            address: "rua a",
-            CEP: "49000-00",
+            CEP: "49066219",
             owner: "joao santos",
             whatsapp: "79999990000",
             userId: user.id
@@ -92,8 +88,7 @@ describe('Create pet', () => {
 
         await expect(() =>
             sut.execute({
-                address: "rua b",
-                CEP: "48000-00",
+                CEP: "01001000",
                 owner: "jose santos",
                 whatsapp: "79999990000",
                 userId: user2.id
@@ -101,7 +96,7 @@ describe('Create pet', () => {
         ).rejects.toBeInstanceOf(RegisterAlreadyExistsError)
     })
 
-    it('should not be able to create a organization without address and whatsapp', async () => {
+    it('should not be able to create a organization without whatsapp', async () => {
         const { user } = await createUserUseCase.execute({
             name: "joao",
             email: "joao@email.com",
@@ -111,7 +106,6 @@ describe('Create pet', () => {
 
         await expect(() =>
             sut.execute({
-                address: null,
                 CEP: null,
                 owner: "joao santos",
                 whatsapp: null,

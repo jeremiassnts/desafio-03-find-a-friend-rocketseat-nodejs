@@ -4,14 +4,17 @@ import { randomUUID } from "crypto";
 
 export class InMemoryOrganizationsRepository implements OrganizationsRepository {
     public organizations: Organization[] = []
-    async create({ owner, CEP, address, whatsapp, userId }: Prisma.OrganizationUncheckedCreateInput): Promise<Organization> {
+    async create({ owner, CEP, address, whatsapp, userId, city, neighborhood, state }: Prisma.OrganizationUncheckedCreateInput): Promise<Organization> {
         const newOrg = {
             id: randomUUID(),
             address,
             CEP,
             owner,
             whatsapp,
-            userId
+            userId,
+            city,
+            neighborhood,
+            state
         }
         this.organizations.push(newOrg)
 

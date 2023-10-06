@@ -3,11 +3,11 @@ import { RegisterAlreadyExistsError } from "./errors/register-already-exists";
 import { UserHasOrganizationError } from "./errors/user-has-organization";
 import { Organization } from "@prisma/client";
 import { OrganizationMustBeCompleteError } from "./errors/organization-must-be-complete";
+import { getAddressByCEP } from "@/utils/get-address-by-cep";
 
 interface CreateOrganizationUseCaseRequest {
     owner: string
     CEP: string
-    address: string
     whatsapp: string
     userId: string
 }
@@ -16,8 +16,8 @@ interface CreateOrganizationUseCaseResponse {
 }
 export class CreateOrganizationUseCase {
     constructor(private organizationsRepository: OrganizationsRepository) { }
-    async execute({ owner, CEP, address, whatsapp, userId }: CreateOrganizationUseCaseRequest): Promise<CreateOrganizationUseCaseResponse> {
-        if (!CEP || !address || !whatsapp) {
+    async execute({ owner, CEP, whatsapp, userId }: CreateOrganizationUseCaseRequest): Promise<CreateOrganizationUseCaseResponse> {
+        if (!CEP || !whatsapp) {
             throw new OrganizationMustBeCompleteError()
         }
 
@@ -31,7 +31,9 @@ export class CreateOrganizationUseCase {
             throw new RegisterAlreadyExistsError()
         }
 
-        org = await this.organizationsRepository.create({ address, CEP, owner, whatsapp, userId })
+        const addressData = await getAddressByCEP(CEP)
+
+        org = await this.organizationsRepository.create({ CEP, owner, whatsapp, userId, ...addressData })
         return {
             org
         }

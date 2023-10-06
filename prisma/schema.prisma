@@ -83,14 +83,17 @@ model User {
 }
 
 model Organization {
-    id       String  @id @default(uuid())
-    owner    String?
-    CEP      String  @db.VarChar(9)
-    address  String
-    whatsapp String  @unique @db.VarChar(11)
-    pets     Pet[]
-    user     User    @relation(fields: [userId], references: [id])
-    userId   String  @unique
+    id           String  @id @default(uuid())
+    owner        String?
+    CEP          String  @db.VarChar(9)
+    address      String?
+    neighborhood String?
+    city         String?
+    state        String?
+    whatsapp     String  @unique @db.VarChar(11)
+    pets         Pet[]
+    user         User    @relation(fields: [userId], references: [id])
+    userId       String  @unique
 
     @@map("organizations")
 }

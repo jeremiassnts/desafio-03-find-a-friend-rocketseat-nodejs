@@ -11,6 +11,7 @@ import { UsersRepository } from '@/repositories/users-repository'
 import { CreateUserUseCase } from './create-user'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { GetPetsUseCase } from './get-pets'
+import { GetPetsMustHaveCity } from './errors/get-pet-must-have-city'
 
 describe('Get pets', () => {
     let petsRepository: PetsRepository
@@ -94,5 +95,39 @@ describe('Get pets', () => {
         })
 
         expect(pets).toHaveLength(1)
+    })
+
+    it('should not be able to get pets without city', async () => {
+        const { user } = await createUserUseCase.execute({
+            name: "joao",
+            email: "joao@email.com",
+            password: "123456",
+            role: "ORG"
+        })
+
+        const { org } = await createOrganizationUseCase.execute({
+            CEP: "49066219",
+            owner: "joao santos",
+            whatsapp: "79999990000",
+            userId: user.id
+        })
+
+        await createPetUseCase.execute({
+            name: 'bethoven',
+            about: 'A movie star dog',
+            age: 'Adulto',
+            ambient: 'Grande',
+            energy: 'Grande',
+            independency: 'Media',
+            size: 'Grande',
+            requirements: ['requirement 1', 'requirement 2'],
+            photos: ['https://url.com/1.png', 'https://url.com/2.png'],
+            organizationId: org.id
+        })
+
+        await expect(() => sut.execute({
+            city: null,
+            state: null
+        })).rejects.toBeInstanceOf(GetPetsMustHaveCity)
     })
 })

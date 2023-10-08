@@ -1,6 +1,7 @@
 import { Organization, Prisma } from "@prisma/client";
 import { OrganizationsRepository } from "../organizations-repository";
 import { randomUUID } from "crypto";
+import { GetResult } from "@prisma/client/runtime/library";
 
 export class InMemoryOrganizationsRepository implements OrganizationsRepository {
     public organizations: Organization[] = []
@@ -33,5 +34,10 @@ export class InMemoryOrganizationsRepository implements OrganizationsRepository 
         if (!org) return null
 
         return org
+    }
+
+    async getManyByCity(city: string, state: string) {
+        const orgs = this.organizations.filter(org => org.city?.toUpperCase() === city.toUpperCase() && org.state?.toUpperCase() === state.toUpperCase())
+        return orgs
     }
 }

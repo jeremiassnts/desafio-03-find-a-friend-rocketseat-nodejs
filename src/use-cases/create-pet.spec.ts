@@ -40,8 +40,7 @@ describe('Create pet', () => {
     })
 
     const { org } = await createOrganizationUseCase.execute({
-      address: "rua a",
-      CEP: "49000-00",
+      CEP: "49066219",
       owner: "joao santos",
       whatsapp: "79999990000",
       userId: user.id

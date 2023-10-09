@@ -25,7 +25,7 @@ export class CreatePetUseCase {
   constructor(
     private petsRepository: PetsRepository,
     private photosRepository: PhotosRepository,
-  ) { }
+  ) {}
 
   async execute({
     name,
@@ -37,7 +37,7 @@ export class CreatePetUseCase {
     photos,
     requirements,
     size,
-    organizationId
+    organizationId,
   }: CreatePetUseCaseRequest): Promise<CreatePetUseCaseResponse> {
     if (!organizationId) {
       throw new PetMustHaveOrganizationError()
@@ -52,7 +52,7 @@ export class CreatePetUseCase {
       independency,
       size,
       requirements,
-      organizationId
+      organizationId,
     })
 
     const photosLength = await this.photosRepository.createMany(

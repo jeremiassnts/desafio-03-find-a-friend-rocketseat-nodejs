@@ -27,23 +27,25 @@ describe('Create pet', () => {
     organizationsRepository = new InMemoryOrganizationsRepository()
     usersRepository = new InMemoryUsersRepository()
     sut = new CreatePetUseCase(petsRepository, photosRepository)
-    createOrganizationUseCase = new CreateOrganizationUseCase(organizationsRepository)
+    createOrganizationUseCase = new CreateOrganizationUseCase(
+      organizationsRepository,
+    )
     createUserUseCase = new CreateUserUseCase(usersRepository)
   })
-  
+
   it('should be able to create a pet with photos', async () => {
     const { user } = await createUserUseCase.execute({
-      name: "joao",
-      email: "joao@email.com",
-      password: "123456",
-      role: "ORG"
+      name: 'joao',
+      email: 'joao@email.com',
+      password: '123456',
+      role: 'ORG',
     })
 
     const { org } = await createOrganizationUseCase.execute({
-      CEP: "49066219",
-      owner: "joao santos",
-      whatsapp: "79999990000",
-      userId: user.id
+      CEP: '49066219',
+      owner: 'joao santos',
+      whatsapp: '79999990000',
+      userId: user.id,
     })
 
     const { pet, photosLength } = await sut.execute({
@@ -56,7 +58,7 @@ describe('Create pet', () => {
       size: 'Grande',
       requirements: ['requirement 1', 'requirement 2'],
       photos: ['https://url.com/1.png', 'https://url.com/2.png'],
-      organizationId: org.id
+      organizationId: org.id,
     })
 
     expect(pet.id).toEqual(expect.any(String))
@@ -76,8 +78,8 @@ describe('Create pet', () => {
         size: 'Grande',
         requirements: ['requirement 1', 'requirement 2'],
         photos: ['https://url.com/1.png', 'https://url.com/2.png'],
-        organizationId: null
-      })
+        organizationId: null,
+      }),
     ).rejects.toBeInstanceOf(PetMustHaveOrganizationError)
   })
 })

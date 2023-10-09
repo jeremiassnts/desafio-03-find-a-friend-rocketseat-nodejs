@@ -5,39 +5,39 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-user
 import { RegisterAlreadyExistsError } from './errors/register-already-exists'
 
 describe('Create user', () => {
-    let usersRepository: UsersRepository
-    let sut: CreateUserUseCase
+  let usersRepository: UsersRepository
+  let sut: CreateUserUseCase
 
-    beforeEach(() => {
-        usersRepository = new InMemoryUsersRepository()
-        sut = new CreateUserUseCase(usersRepository)
-    })
-    it('should be able to create a user', async () => {
-        const { user } = await sut.execute({
-            name: "joao",
-            email: "joao@email.com",
-            password: "123456",
-            role: "COMMON"
-        })
-
-        expect(user.id).toEqual(expect.any(String))
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRepository()
+    sut = new CreateUserUseCase(usersRepository)
+  })
+  it('should be able to create a user', async () => {
+    const { user } = await sut.execute({
+      name: 'joao',
+      email: 'joao@email.com',
+      password: '123456',
+      role: 'COMMON',
     })
 
-    it('should not be able to create a user with same email', async () => {
-        await sut.execute({
-            name: "joao",
-            email: "joao@email.com",
-            password: "123456",
-            role: "COMMON"
-        })
+    expect(user.id).toEqual(expect.any(String))
+  })
 
-        await expect(() =>
-            sut.execute({
-                name: "joao",
-                email: "joao@email.com",
-                password: "123456",
-                role: "COMMON"
-            })
-        ).rejects.toBeInstanceOf(RegisterAlreadyExistsError)
+  it('should not be able to create a user with same email', async () => {
+    await sut.execute({
+      name: 'joao',
+      email: 'joao@email.com',
+      password: '123456',
+      role: 'COMMON',
     })
+
+    await expect(() =>
+      sut.execute({
+        name: 'joao',
+        email: 'joao@email.com',
+        password: '123456',
+        role: 'COMMON',
+      }),
+    ).rejects.toBeInstanceOf(RegisterAlreadyExistsError)
+  })
 })

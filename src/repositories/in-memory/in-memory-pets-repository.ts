@@ -16,7 +16,7 @@ export class InMemoryPetsRepository implements PetsRepository {
     independency,
     size,
     requirements,
-    organizationId
+    organizationId,
   }: Prisma.PetUncheckedCreateInput) {
     const pet: Pet = {
       id: randomUUID(),
@@ -28,23 +28,36 @@ export class InMemoryPetsRepository implements PetsRepository {
       independency,
       size,
       requirements,
-      organizationId
+      organizationId,
     }
 
     this.pets.push(pet)
     return pet
   }
 
-  async getMany({ city, state, age, ambient, energy, independency, size }: GetPetsUseCaseRequest, organizationsRepository: OrganizationsRepository) {
+  async getMany(
+    {
+      city,
+      state,
+      age,
+      ambient,
+      energy,
+      independency,
+      size,
+    }: GetPetsUseCaseRequest,
+    organizationsRepository: OrganizationsRepository,
+  ) {
     const orgs = await organizationsRepository.getManyByCity(city, state)
     const cityPets = this.pets
-      .filter(pet => orgs.some(org => org.id === pet.organizationId))
-      .filter(pet => {
-        return (!age || pet.age === age)
-          && (!ambient || pet.ambient === ambient)
-          && (!energy || pet.energy === energy)
-          && (!independency || pet.independency === independency)
-          && (!size || pet.size === size)
+      .filter((pet) => orgs.some((org) => org.id === pet.organizationId))
+      .filter((pet) => {
+        return (
+          (!age || pet.age === age) &&
+          (!ambient || pet.ambient === ambient) &&
+          (!energy || pet.energy === energy) &&
+          (!independency || pet.independency === independency) &&
+          (!size || pet.size === size)
+        )
       })
 
     return cityPets

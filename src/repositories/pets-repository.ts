@@ -4,5 +4,8 @@ import { OrganizationsRepository } from './organizations-repository'
 
 export interface PetsRepository {
   create(data: Prisma.PetUncheckedCreateInput): Promise<Pet>
-  getMany(data: GetPetsUseCaseRequest, organizationsRepository: OrganizationsRepository): Promise<Pet[]>
+  getMany(
+    data: GetPetsUseCaseRequest,
+    organizationsRepository: OrganizationsRepository,
+  ): Promise<Pet[]>
 }

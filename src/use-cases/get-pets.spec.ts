@@ -130,4 +130,71 @@ describe('Get pets', () => {
             state: null
         })).rejects.toBeInstanceOf(GetPetsMustHaveCity)
     })
+    it('should be able to get pets filtered by characteristics', async () => {
+        const { user } = await createUserUseCase.execute({
+            name: "joao",
+            email: "joao@email.com",
+            password: "123456",
+            role: "ORG"
+        })
+
+        const { org } = await createOrganizationUseCase.execute({
+            CEP: "49066219",
+            owner: "joao santos",
+            whatsapp: "79999990000",
+            userId: user.id
+        })
+
+        await createPetUseCase.execute({
+            name: 'bethoven',
+            about: 'A movie star dog',
+            age: 'Adulto',
+            ambient: 'Grande',
+            energy: 'Grande',
+            independency: 'Media',
+            size: 'Grande',
+            requirements: ['requirement 1', 'requirement 2'],
+            photos: ['https://url.com/1.png', 'https://url.com/2.png'],
+            organizationId: org.id
+        })
+
+        const { user: user2 } = await createUserUseCase.execute({
+            name: "jose",
+            email: "jose@email.com",
+            password: "123456",
+            role: "ORG"
+        })
+
+        const { org: org2 } = await createOrganizationUseCase.execute({
+            CEP: "49066219",
+            owner: "jose santos",
+            whatsapp: "79999991111",
+            userId: user2.id
+        })
+
+        await createPetUseCase.execute({
+            name: 'caramelo',
+            about: 'representa mais o brasil do que samba',
+            age: 'Adulto',
+            ambient: 'Medio',
+            energy: 'Altissima',
+            independency: 'Alta',
+            size: 'Medio',
+            requirements: ['requirement 1', 'requirement 2'],
+            photos: ['https://url.com/1.png', 'https://url.com/2.png'],
+            organizationId: org2.id
+        })
+
+        const { pets } = await sut.execute({
+            city: 'Aracaju',
+            state: 'SE',
+            age: 'Adulto',
+            ambient: 'Grande',
+            energy: 'Grande',
+            independency: 'Media',
+            size: 'Grande',
+        })
+
+        expect(pets).toHaveLength(1)
+    })
 })

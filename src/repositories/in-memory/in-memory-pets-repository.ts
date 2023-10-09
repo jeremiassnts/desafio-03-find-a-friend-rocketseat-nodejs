@@ -35,12 +35,17 @@ export class InMemoryPetsRepository implements PetsRepository {
     return pet
   }
 
-  async getMany({ city, state }: GetPetsUseCaseRequest, organizationsRepository: OrganizationsRepository) {
+  async getMany({ city, state, age, ambient, energy, independency, size }: GetPetsUseCaseRequest, organizationsRepository: OrganizationsRepository) {
     const orgs = await organizationsRepository.getManyByCity(city, state)
-    const cityPets = orgs.reduce((arr: any, pet) => {
-      arr.push(pet)
-      return arr
-    }, [])
+    const cityPets = this.pets
+      .filter(pet => orgs.some(org => org.id === pet.organizationId))
+      .filter(pet => {
+        return (!age || pet.age === age)
+          && (!ambient || pet.ambient === ambient)
+          && (!energy || pet.energy === energy)
+          && (!independency || pet.independency === independency)
+          && (!size || pet.size === size)
+      })
 
     return cityPets
   }

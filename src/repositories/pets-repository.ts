@@ -8,4 +8,5 @@ export interface PetsRepository {
     data: GetPetsUseCaseRequest,
     organizationsRepository: OrganizationsRepository,
   ): Promise<Pet[]>
+  getById(id: string): Promise<Pet | null>
 }

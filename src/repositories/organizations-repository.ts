@@ -5,4 +5,5 @@ export interface OrganizationsRepository {
   findByWhatsapp(whatsapp: string): Promise<Organization | null>
   findByUserId(userId: string): Promise<Organization | null>
   getManyByCity(city: string, state: string): Promise<Organization[]>
+  getById(id: string): Promise<Organization | null>
 }

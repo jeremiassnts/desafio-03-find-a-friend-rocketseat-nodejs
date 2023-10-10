@@ -3,8 +3,7 @@ import { OrganizationsRepository } from '../organizations-repository'
 import { randomUUID } from 'crypto'
 
 export class InMemoryOrganizationsRepository
-  implements OrganizationsRepository
-{
+  implements OrganizationsRepository {
   public organizations: Organization[] = []
   async create({
     owner,
@@ -53,5 +52,9 @@ export class InMemoryOrganizationsRepository
         org.state?.toUpperCase() === state.toUpperCase(),
     )
     return orgs
+  }
+  async getById(id: string) {
+    const organization = this.organizations.filter(organization => organization.id === id)[0]
+    return organization
   }
 }

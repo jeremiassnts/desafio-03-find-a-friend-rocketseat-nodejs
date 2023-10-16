@@ -62,8 +62,9 @@ export class InMemoryPetsRepository implements PetsRepository {
 
     return cityPets
   }
+
   async getById(id: string) {
-    const pet = this.pets.filter(pet => pet.id === id)[0]
+    const pet = this.pets.filter((pet) => pet.id === id)[0]
     return pet
   }
 }

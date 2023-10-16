@@ -15,7 +15,7 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
     size: z.enum(['Pequenino', 'Medio', 'Grande']),
     photos: z.array(z.string()),
     requirements: z.array(z.string()),
-    organizationId: z.string()
+    organizationId: z.string(),
   })
 
   const {
@@ -28,7 +28,7 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
     size,
     photos,
     requirements,
-    organizationId
+    organizationId,
   } = createBodySchema.parse(request.body)
 
   const petsRepository = new PrismaPetsRepository()
@@ -48,7 +48,7 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
     size,
     photos,
     requirements,
-    organizationId
+    organizationId,
   })
 
   reply.status(201).send({

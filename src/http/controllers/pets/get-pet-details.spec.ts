@@ -4,7 +4,7 @@ import request from 'supertest'
 import { prisma } from '@/utils/create-prisma-client'
 import { hash } from 'bcryptjs'
 
-describe('Create pet (e2e)', () => {
+describe('Get pet details (e2e)', () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -13,7 +13,7 @@ describe('Create pet (e2e)', () => {
     await app.close()
   })
 
-  it('should be able to create a pet', async () => {
+  it('should be able to get details of a pet', async () => {
     const user = await prisma.user.create({
       data: {
         name: 'joao',
@@ -32,7 +32,7 @@ describe('Create pet (e2e)', () => {
       },
     })
 
-    const response = await request(app.server)
+    const petCreationResponse = await request(app.server)
       .post('/pets')
       .send({
         name: 'bethoven',
@@ -47,6 +47,11 @@ describe('Create pet (e2e)', () => {
         organizationId: org.id,
       })
 
-    expect(response.statusCode).toEqual(201)
+    const response = await request(app.server).get(
+      '/pets/' + petCreationResponse.body.pet.id,
+    )
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.pet.id).toEqual(petCreationResponse.body.pet.id)
   })
 })

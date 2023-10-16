@@ -12,27 +12,40 @@ export class PrismaPetsRepository implements PetsRepository {
 
     return pet
   }
+
   async getById(id: string) {
     const pet = await prisma.pet.findFirst({
       where: {
-        id
-      }
+        id,
+      },
     })
     return pet
   }
-  async getMany({ city, state, age, ambient, energy, independency, size }: GetPetsUseCaseRequest, organizationsRepository: OrganizationsRepository) {
-    const pets = prisma.pet.findMany({
+
+  async getMany(
+    {
+      city,
+      state,
+      age,
+      ambient,
+      energy,
+      independency,
+      size,
+    }: GetPetsUseCaseRequest,
+    _: OrganizationsRepository,
+  ) {
+    const pets = await prisma.pet.findMany({
       where: {
         Organization: {
           city,
-          state
+          state,
         },
-        age: age ? age : undefined,
-        ambient: ambient ? ambient : undefined,
-        energy: energy ? energy : undefined,
-        independency: independency ? independency : undefined,
-        size: size ? size : undefined,
-      }
+        age: age || undefined,
+        ambient: ambient || undefined,
+        energy: energy || undefined,
+        independency: independency || undefined,
+        size: size || undefined,
+      },
     })
 
     return pets

@@ -32,8 +32,16 @@ describe('Get pet details (e2e)', () => {
       },
     })
 
+    const authResponse = await request(app.server)
+      .post('/authenticate')
+      .send({
+        email: 'joao@email.com',
+        password: '123456'
+      })
+
     const petCreationResponse = await request(app.server)
       .post('/pets')
+      .set('Authorization', `Bearer ${authResponse.body.token}`)
       .send({
         name: 'bethoven',
         about: 'A movie star dog',
